@@ -1,0 +1,11 @@
+function (doc, meta) {
+  if (doc.type && doc.type == "follow") {
+    if (doc.deleted && doc.deleted == true) {
+      return;
+    }
+    
+    if (doc.ownerUserProfile) {
+      emit(doc.ownerUserProfile, 1);
+    }
+  }  
+}

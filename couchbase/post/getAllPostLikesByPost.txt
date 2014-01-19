@@ -1,0 +1,11 @@
+function (doc, meta) {
+  if (doc.type && doc.type == "likepost") {
+    if (doc.deleted && doc.deleted == true) {
+      return;
+    }
+      
+    if (doc.postDocId) {
+      emit(doc.postDocId, 1);
+    }
+  }  
+}

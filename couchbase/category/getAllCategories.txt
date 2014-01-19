@@ -1,0 +1,6 @@
+function (doc, meta) {
+  if (doc.type && doc.type == "category")
+  {
+    emit(meta.id, 1);
+  }
+}

@@ -1,0 +1,11 @@
+function (doc, meta) {
+  if (doc.type && doc.type == "userProfile") {
+    if (doc.deleted && doc.deleted == true) {
+      return;
+    }
+    
+    if (doc.userId) {
+      emit(doc.userId, meta.id);
+    }
+  }  
+}

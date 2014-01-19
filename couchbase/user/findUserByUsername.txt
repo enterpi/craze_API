@@ -1,0 +1,9 @@
+function (doc, meta) {
+  if (doc.type && doc.type == "userProfile") 
+  {
+    if (doc.username) 
+    {
+      emit(doc.username, null);
+    }
+  }
+}

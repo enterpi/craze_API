@@ -1,0 +1,11 @@
+function (doc, meta) {
+  if (doc.type && doc.type == "post") {
+    if (doc.parentPostId && doc.parentPostId == 0) {
+      if (doc.deleted && doc.deleted == true) {
+        return;
+      }
+      
+      emit([doc.postScore, meta.id], null);
+    }
+  }  
+}

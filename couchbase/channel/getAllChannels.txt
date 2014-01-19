@@ -1,0 +1,11 @@
+function (doc, meta) {
+  if (doc.type && doc.type == "channel") {
+    if (doc.deleted && doc.deleted == true) {
+      return;
+    }
+    
+    if (doc.channelId) {
+      emit(doc.channelId, meta.id);
+    }
+  }  
+}
