@@ -36,24 +36,18 @@ if ($Environment == 'DEV') {
     $config['base_url']	= "http://".$ServerName . "/main"; 
     $config['cron_base_url'] = "http://".$ServerName . "/main";
     $config['ffmpeg_path'] = "/usr/local/bin/";
-    $config['auto_follow_fanpages'] = array('1936');
     $config['PushServerMemcache'] = array("hostname"=>"127.0.0.1", "port"=>"11211");
 } elseif ($Environment == 'STAGE') { 
     $config['base_url']	= "http://".$ServerName; 
     $config['cron_base_url'] = "http://".$ServerName;
     $config['ffmpeg_path'] = "/usr/local/bin/";
-    $config['auto_follow_fanpages'] = array('1972');
     $config['PushServerMemcache'] = array("hostname"=>"127.0.0.1", "port"=>"11211");
 } elseif ($Environment == 'PROD') { 
     $config['base_url']	= "https://".$ServerName; 
     $config['cron_base_url'] = "https://".$ServerName;
     $config['ffmpeg_path'] = "/usr/local/bin/";
-    $config['auto_follow_fanpages'] = array('');
     $config['PushServerMemcache'] = array("hostname"=>"127.0.0.1", "port"=>"11211");
 }
-
-$config['youtubeVideo1'] = 'http://www.youtube.com/watch?v=';
-$config['youtubeVideo2'] = '&version=3&autohide=2&modestbranding=0&fs=1&showinfo=0&theme=dark&color=white';
 
 /*
 |--------------------------------------------------------------------------
@@ -263,7 +257,7 @@ $config['cache_path'] = '';
 | MUST set an encryption key.  See the user guide for info.
 |
 */
-$config['encryption_key'] = 'neova';
+$config['encryption_key'] = 'crazeascrazeis';
 
 /*
 |--------------------------------------------------------------------------
@@ -288,7 +282,6 @@ $config['sess_expiration']= 1260;
 $config['sess_expire_on_close']	= FALSE;
 $config['sess_encrypt_cookie']	= FALSE;
 $config['sess_use_database']	= FALSE;
-$config['sess_table_name']= 'kz_sessions';
 $config['sess_match_ip']= FALSE;
 $config['sess_match_useragent']	= FALSE;
 $config['sess_time_to_update']	= 600;
@@ -397,11 +390,11 @@ $config['rewrite_short_tags'] = FALSE;
 $config['proxy_ips'] = '';
 
 // email related. Change the domain name to staging when its hosted
-// on the staging server (e.g. do-not-reply@kazaana.com) 
-	$config['admin_name'] = 'Kazaana Team';
-	$config['admin_email'] = 'do-not-reply@kazaana.com';
-	$config['supportEmail'] = 'support@kazaana.com';
-	$config['contactEmail'] = 'info@kazaana.com';
+// on the staging server (e.g. do-not-reply@oncraze.com) 
+	$config['admin_name'] = 'Craze Team';
+	$config['admin_email'] = 'do-not-reply@oncraze.com';
+	$config['supportEmail'] = 'support@oncraze.com';
+	$config['contactEmail'] = 'info@oncraze.com';
 
 	/* Change this to smtp from sendmail for local servers*/
 	$config['protocol'] = 'sendmail';
@@ -410,7 +403,7 @@ $config['proxy_ips'] = '';
 	$config['mailpath'] = '/usr/sbin/sendmail';	
 	
 	$config['sendEmail'] = true;
-// End Kazaana email
+// End email
 
 // Audit trail of requests and response times on/off 
 	$config['audit'] = false;
@@ -437,7 +430,6 @@ $config['proxy_ips'] = '';
 // Database level session management provided by codeigniter 	
 	$config['sess_cookie_name'] = 'craze_session';
 	$config['sess_use_database'] = FALSE;
-	$config['sess_table_name'] = 'kz_sessions';
 
 // Revision number -- Edit only this line. Add/Remove a star ***** to commit and update revision number
 // Date $Date$

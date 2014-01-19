@@ -76,93 +76,6 @@ define('CHANNEL_PERSONAL_CHANNEL_ID', "Cat::PersonalChannels");
 // NAM: end of my constants
 
 
-/* Application Level Constants */
-// Messages
-define('DEFAULT_NUM_OF_MESSAGES',5);
-define('MAX_NUM_OF_MESSAGES',50);
-define('MESSAGE_EXCERPT_SIZE',100);
-
-// Recommended Friends
-define('DEFAULT_RECOMMENDED_FRIENDS', 30);
-define('MAX_RECOMMENDED_FRIENDS',100);
-
-// Wall 
-define('DEFAULT_NUM_OF_POSTS', 10);
-define('MAX_NUM_OF_POSTS',100);
-
-// getUserProfile Constants
-define('USER_PROFILE_MAX_FRIENDS', 30);
-define('USER_PROFILE_MAX_ASSETS', 30);
-define('USER_PROFILE_MAX_FANPAGES', 30);
-
-// Search Connections 
-define('DEFAULT_NUM_OF_SEARCH_CONNECTIONS',10);
-define('MAX_NUM_OF_SEARCH_CONNECTIONS',50);
-
-// Username
-define('MAX_LENGTH_USERNAME',20);
-
-/**
- * Look-up constants  
- */
-
-define('CONTYPE_FRIEND',1);
-
-define('MESSAGETYPE_NEWS',1);
-define('MESSAGETYPE_REPLY',2);
-define('MESSAGETYPE_FORWARD',3);
-define('MESSAGETYPE_NOTIFICATION',4);
-
-define('REFTYPE_POST',1);
-define('REFTYPE_COMMENT',2);
-define('REFTYPE_CHATASSET',3);
-define('REFTYPE_ASSET',4);
-define('REFTYPE_ASSETALBUM',5);
-define('REFTYPE_MESSAGE',6);
-define('REFTYPE_APPS',7);
-define('REFTYPE_PROFILEPIC',8);
-define('REFTYPE_MOBILEUPLOADS',9);
-define('REFTYPE_MOBILEPROFILEPIC',10);
-
-define('UPLOADTYPE_CHATTERBOX',1);
-define('UPLOADTYPE_PROFILEPHOTO',2);
-
-define('ALBUM_ISSHARED_PARTIAL', '0');
-define('ALBUM_ISSHARED_ALL', '1');
-define('ALBUM_ISSHARED_NONE', '2');
-
-define('ALBUM_IS_DELETABLE_TRUE', '1');
-define('ALBUM_IS_DELETABLE_FALSE', '0');
-
-define('ALBUM_ADD_ALLOWED_TRUE', '0');
-define('ALBUM_ADD_ALLOWED_FALSE', '1');
-
-define('ALBUM_GROUP_UPLOAD_NO', '0');
-define('ALBUM_GROUP_UPLOAD_YES', '1');
-
-define('PUSH_NOTIFICATIONS_FALSE', '0');
-define('PUSH_NOTIFICATIONS_TRUE', '1');
-
-define('USERTYPE_ADMIN',1);
-define('USERTYPE_MODERATOR',2);
-define('USERTYPE_USER',3);
-define('USERTYPE_KID',3);
-define('USERTYPE_FAN',4);
-
-define('CREATIONTYPE',1);
-
-// Define Boy / Girl constants
-define('GENDER_BOY', 'M');
-define('GENDER_GIRL', 'F');
-
-// Cache related constants
-define('CACHEDUSERINFO','user_info_');
-define('CACHEDUSERTOKEN','userToken_');
-
-// Item Type Constants 
-define('ITEMTYPE_BACKGROUND',1);
-define('ITEMTYPE_VIRTUALGOOD',2);
-
 // Score values for like and comment on a post
 define('POST_SCORE_LIKE', 5);
 define('POST_SCORE_COMMENT', 10);
@@ -198,26 +111,5 @@ define('DOC_KEY_POST', 'post');
 define('DOC_TYPE_FOLLOW', 'follow');
 define('DOC_KEY_FOLLOW', 'flr');
 
-define('COUCHBASE_CHAT_CONVERSATION_TYPE', 'chatConversation');
-define('COUCHBASE_CHAT_MESSAGE_TYPE', 'chatMessage');
-define('COUCHBASE_CONVERSATIONID_COUNT', 'conversationId');
-define('COUCHBASE_CHATID_COUNT', 'messageId');
-define('COUCHBASE_POSTID_COUNT', 'postId');
-define('COUCHBASE_COMMENTID_COUNT', 'commentId');
-define('COUCHBASE_WALL_POST_TYPE', 'wallPost');
-define('COUCHBASE_WALL_COMMENT_TYPE', 'wallComment');
-define('COUCHBASE_POST_DOC', 'post');
-define('COUCHBASE_POST_COMMENT_DOC', 'comment');
-
-// Chat constants
-define('CHAT_MAX_LIMIT', 50);
-define('CHAT_DEFAULT_LIMIT', 5);
-define('CHAT_MAX_MESSAGE_ID', 999999999999);
-
-// Use S3 flag 
-define('UseS3',1);
-
-/// New UI constants .... 
-define('NEW_UI',1);
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

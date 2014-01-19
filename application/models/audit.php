@@ -15,7 +15,7 @@ class Audit extends CI_Model
 			'token' => $tokenId, 
 			'userId' => $userId,
 		);
-		$this->db->insert('audit',$auditData);
+//		$this->db->insert('audit',$auditData);
 	}
 }
 ?>

@@ -13,25 +13,20 @@ class website extends My_Controller {
 		parent::__construct();
 		$this->load->helper('common');
 		$this->load->helper('debug');
-
-debugDummy("inside website");
 	}
 	
 	function index()
 	{
-debugDummy("inside index");
 		$this->load->view('static2/index');
 	}
 	
 	function healthCheck()
         {
-debugDummy("inside health");
                 $this->load->view('static2/healthCheck');
         }
 
 	function apis()
 	{
-debugDummy("inside apis");
 		if($this->config->item('Environment') != 'PROD'){
 			$this->load->view('apiviews/vmain');
 		}else{
