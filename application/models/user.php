@@ -46,7 +46,6 @@ class User extends CI_Model
 			$cb_obj = new Couchbase($this->config->item('cb_hostname'), $this->config->item('cb_username'), $this->config->item('cb_password'), $this->config->item('cb_craze_bucket'));
 
                         $docKey = DOC_KEY_USER_PROFILE . COUCHBASE_KEY_DELIM . $requestUserId;
-debugDummy("NAM: getUser: docKey: " . $docKey);
 
                         // Get user profile document from db
                         $userDoc = $cb_obj->get($docKey);
@@ -288,7 +287,7 @@ debugDummy("getAllUsers: getting user doc: " .$row['id']);
                         // Get user profile document from db
                         $myDoc = $cb_obj->get($docKey);
  			if($myDoc) {
-     				$doc = json_decode($myDoc, true);
+     				$userJson = json_decode($myDoc, true);
 			} else {
 				$resData['_responseStatus'] = (integer)false;
 				list($resData['msgCode'], $resData['msg']) = generateError('ERR_002');
@@ -296,7 +295,7 @@ debugDummy("getAllUsers: getting user doc: " .$row['id']);
 			}
 
 			// Verify passwords match
-			$docPassword = $doc['password'];
+			$docPassword = $userJson['password'];
 			$password = doEncryption($password);
 //debugDummy("NAM: login: docPassword: " . $docPassword);
 //debugDummy("NAM: login: password: " . $password);
@@ -309,9 +308,46 @@ debugDummy("getAllUsers: getting user doc: " .$row['id']);
 			// Generate session token and store in memcache
 			$sessionToken = "mysessiontoken";
 
+			// Remove password from json
+			$userJson['password'] = "*********";
+
+			// Retrieve User Metrics
+                        $results = $cb_obj->view("post", "getActivityCountByUserProfile", array('key' => $docKey));
+			$activityCount = 0;
+			foreach($results['rows'] as $row) {
+				$activityCount += $row['value'];
+			}
+			$userJson['activityCount'] = $activityCount;
+			
+			// Retrieve User Post Metrics
+                        $results = $cb_obj->view("post", "getAllPostsByUserProfile", array('key' => $docKey,
+											   'reduce' => true));
+			$postCount = 0;
+			foreach($results['rows'] as $row) {
+				$postCount += $row['value'];
+			}
+			$userJson['postCount'] = $postCount;
+			
+			// Retrieve User Followers Metrics
+                        $results = $cb_obj->view("channel", "getAllFollowersOfUserProfile", array('key' => $docKey,
+											       'reduce' => true));
+			$followerCount = 0;
+			foreach($results['rows'] as $row) {
+				$followerCount += $row['value'];
+			}
+			$userJson['followerCount'] = $followerCount;
+			
+			// Re-encode json document
+                       	$userDoc = json_encode($userJson);
+                       	if ($userDoc == false) {
+				$resData['_responseStatus'] = (integer)false;
+				list($resData['msgCode'], $resData['msg']) = generateError('ERR_002');
+                               	return $resData;
+                       	}
+
 			// Return success and the session token
 			$resData['_responseStatus'] = (integer)true;
-			$resData['userJson'] = $myDoc;
+			$resData['userJson'] = $userDoc;
 			$resData['sessionToken'] = $sessionToken;
 
 		} catch (CouchbaseException $e) {
@@ -513,7 +549,6 @@ debugDummy("getAllUsers: getting user doc: " .$row['id']);
 				if (strcmp($username, $doc['username']) != 0) {
 					// Check if username already exists
 					$results = $cb_obj->view("user", "findUserByUsername", array('key' => $username));
-//debugDummy("updateUser: results: " .count($results['rows']));
 					if (count($results['rows']) > 0) {
 						$resData['_responseStatus'] = (integer)false;
 						list($resData['msgCode'], $resData['msg']) = generateError('USR_004');
@@ -530,8 +565,6 @@ debugDummy("getAllUsers: getting user doc: " .$row['id']);
 				// Verify oldPassword == document password
 				$oldPassword = doEncryption($oldPassword);
 				$docPassword = $doc['password'];
-//debugDummy("NAM: updateUser: docPassword: " . $docPassword);
-//debugDummy("NAM:updateUserlogin: password: " . $password);
 				if (strcmp($oldPassword, $docPassword) != 0) {
 					$resData['_responseStatus'] = (integer)false;
 					list($resData['msgCode'], $resData['msg']) = generateError('USR_008');
@@ -539,20 +572,17 @@ debugDummy("getAllUsers: getting user doc: " .$row['id']);
 				}
 				// Set password to new password
 				$doc['password'] = doEncryption($password);
-				//debugDummy("updateUser: updating password to: " . $password);
 			}
 
 			// Update Email
 			if (!empty($email)) {
 				$doc['email'] = $email;
-				//debugDummy("updateUser: updating email to: " . $email);
 			}
 
 
 			// Update profileUrl
 			if (!empty($profileUrl)) {
 				$doc['profileUrl'] = $profileUrl;
-				//debugDummy("updateUser: updating profileUrl to: " . $profileUrl);
 			}
 				
 
@@ -572,7 +602,6 @@ debugDummy("getAllUsers: getting user doc: " .$row['id']);
                                 // Update Document in db
 				$cb_obj->replace($docKey, $jsonDoc);
 				if ($cb_obj->getResultCode() != 0) {
-//debugDummy("updateUser: replace result: " . $cb_obj->getResultCode());
 					$resData['_responseStatus'] = (integer)false;
 					list($resData['msgCode'], $resData['msg']) = generateError('ERR_002');
                                 	return $resData;

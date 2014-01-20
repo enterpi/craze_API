@@ -48,7 +48,6 @@ class Channel extends CI_Model
 				$docKey = $channelDocId;
 			else 
 				$docKey = DOC_KEY_CHANNEL . COUCHBASE_KEY_DELIM . $channelId;
-debugDummy("NAM: getChannel: docKey: " . $docKey);
 
                         // Get channel document from db
                         $channelDoc = $cb_obj->get($docKey);
@@ -97,7 +96,6 @@ debugDummy("NAM: getChannel: docKey: " . $docKey);
 		$offsetDocId = $this->input->post('offsetDocId');
 		$limit = $this->input->post('limit');
 
-debugDummy("inside getAllChannels");
 		// exception handling
 		if(empty($sessionToken)) {
 			$resData['_responseStatus'] = (integer)false;
@@ -141,10 +139,10 @@ debugDummy("inside getAllChannels");
                         if ($offset != CHANNEL_MAX_ID)
                                 $skip = 1;
 
-debugDummy("getAllChannels: myStartKey: " . $myStartKey);
-debugDummy("getAllChannels: endKey: " . $myEndKey);
-debugDummy("getAllChannels: limit: " . $limit);
-debugDummy("getAllChannels: skip: " . $skip);
+//debugDummy("getAllChannels: myStartKey: " . $myStartKey);
+//debugDummy("getAllChannels: endKey: " . $myEndKey);
+//debugDummy("getAllChannels: limit: " . $limit);
+//debugDummy("getAllChannels: skip: " . $skip);
                         $results = $cb_obj->view("channel", "getAllChannels", array('startkey' => $myStartKey,
                                                                                     'endkey' => $myEndKey,
                                                                                     'descending' => 'true',
@@ -158,7 +156,7 @@ debugDummy("getAllChannels: skip: " . $skip);
 			foreach($results['rows'] as $row) {
                         	// Get user profile document from db
                                 unset($doc);
-debugDummy("getAllChannels: getting channel doc: " .$row['id']);
+//debugDummy("getAllChannels: getting channel doc: " .$row['id']);
 	                        $doc = $cb_obj->get($row['id']);
  				if($doc) {
      					$channelJson = json_decode($doc, true);
@@ -207,7 +205,6 @@ debugDummy("getAllChannels: getting channel doc: " .$row['id']);
 		$requestUserId = $this->input->post('requestUserId');
 		$requestUserDocId = $this->input->post('requestUserDocId');
 
-debugDummy("inside getChannelsByUserProfile");
 		// exception handling
 		if(empty($sessionToken)) {
 			$resData['_responseStatus'] = (integer)false;
@@ -239,7 +236,6 @@ debugDummy("inside getChannelsByUserProfile");
 				$docKey = $requestUserDocId;
 			else 
 				$docKey = DOC_KEY_USER_PROFILE . COUCHBASE_KEY_DELIM . $requestUserId;
-debugDummy("NAM: getChannelsByUserProfile: docKey: " . $docKey);
 
 			// Retrieve channel docs from DB
                         $results = $cb_obj->view("channel", "getChannelsByUserProfile", array('key' => $docKey,
@@ -252,7 +248,6 @@ debugDummy("NAM: getChannelsByUserProfile: docKey: " . $docKey);
 			foreach($results['rows'] as $row) {
                         	// Get user profile document from db
                                 unset($doc);
-debugDummy("getChannelsByUserProfile: getting channel doc: " .$row['id']);
 	                        $doc = $cb_obj->get($row['id']);
  				if($doc) {
      					$channelJson = json_decode($doc, true);
@@ -260,6 +255,11 @@ debugDummy("getChannelsByUserProfile: getting channel doc: " .$row['id']);
 					debugDummy("getChannelsByUserProfile: failed to get channel Doc: " . $row['id']);
 					continue;
 				}
+
+				// Add channel metrics to channel Doc
+				$channelJson['channelPostCount'] = 100;
+				$channelJson['channelActivityCount'] = 200;
+				$channelJson['channelFollowerCount'] = 300;
 
 				array_push($channelDocs, $channelJson);
                         }
@@ -599,7 +599,6 @@ debugDummy("getChannelsByUserProfile: getting channel doc: " .$row['id']);
 				$docKey = $channelDocId;
 			else 
 				$docKey = DOC_KEY_CHANNEL . COUCHBASE_KEY_DELIM . $channelId;
-debugDummy("NAM: deleteChannel: docKey: " . $docKey);
 
                         // Get channel document from db
                         $myDoc = $cb_obj->get($docKey);
@@ -709,7 +708,6 @@ debugDummy("NAM: deleteChannel: docKey: " . $docKey);
 
                         // Generate docKey and delete from DB
                         $docKey = DOC_KEY_FOLLOW . COUCHBASE_KEY_DELIM . $channelId . COUCHBASE_KEY_DELIM . $userId;
-debugDummy("NAM: unfollowChannel: docKey: " . $docKey);
                         $cb_obj->delete($docKey);
 			if ($cb_obj->getResultCode() != 0) {
 				$resData['_responseStatus'] = (integer)false;
@@ -780,7 +778,6 @@ debugDummy("NAM: unfollowChannel: docKey: " . $docKey);
 				$expArray = explode(COUCHBASE_KEY_DELIM, $channelDocId);
 				$channelId = $expArray[1];
 			}
-debugDummy("NAM: followChannel: docKey: " . $channelDocId);
 
                         // Get channel document from db
                         $channelDoc = $cb_obj->get($channelDocId);
