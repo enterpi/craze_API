@@ -22,6 +22,8 @@
 		<p>hasAttachment (true, false): <input type="text" name="hasAttachment" value="" id="hasAttachment"/> </p>
 		<p>Parent Post Id: <input type="text" name="parentPostId" value="" id="parentPostId"/> </p>
 		<p>Post Sequence Id: <input type="text" name="postSeqId" value="" id="postSeqId"/> </p>
+		<p>Geo Location Latitude: <input type="text" name="geolocationLatitude" value="" id="geolocationLatitude"/> </p>
+		<p>Geo Location Longitude: <input type="text" name="geolocationLongitude" value="" id="geolocationLongitude"/> </p>
 		<p>isSharedPost (true, falsoe): <input type="text" name="isSharedPost" value="" id="isSharedPost"/> </p> 
 		<p>Shared From Post Doc: <input type="text" name="sharedFromPost" value="" id="sharedFromPost"/> </p>
 		<p>isPublic Channel (1 true, 0 false): <input type="text" name="isPublic" value="" id="isPublic"/> </p>

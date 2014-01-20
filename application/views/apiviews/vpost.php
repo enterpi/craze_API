@@ -2,6 +2,7 @@
 	<ul>
 	<li><a href="<?php echo site_url("posts/test/getAllPosts");?>">Get All Posts</a></li>	
 	<li><a href="<?php echo site_url("posts/test/getPost");?>">Get Post</a></li>	
+	<li><a href="<?php echo site_url("posts/test/createMultiStepPost");?>">Create Multi Step Post</a></li>	
 	<li><a href="<?php echo site_url("posts/test/createPost");?>">Create Post</a></li>	
 	<li><a href="<?php echo site_url("posts/test/updatePost");?>">Update Post</a></li>	
 	<li><a href="<?php echo site_url("posts/test/deletePost");?>">Delete Post</a></li>		

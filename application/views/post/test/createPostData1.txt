@@ -1,0 +1,69 @@
+{
+    "sessionToken": "sessiontoken",
+    "postSeqId": 0,
+    "userId": 2007,
+    "userDocId": "usr::2007",
+    "channelId": 2018,
+    "channelDocId": "chn::2018",
+    "sharedPost": 0,
+    "sharedFromPost": 0,
+    "assetType": 1,
+    "hasAttachment": 1,
+    "isPublic": 1,
+    "geolocationLatitude": -999,
+    "geolocationLongitude": -999,
+    "postTitle": "Test Post Title",
+    "postText": "Test Post Content",
+    "originalAsset": "http:\/\/www.google.com\/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&docid=oeYTMVuxxuYugM&tbnid=XXpYpeH4PwjaLM:&ved=0CAUQjRw&url=http%3A%2F%2Fmyyellowlab.com%2Fpictures-of-cute-dogs%2F&ei=Q3bcUqqYA_DLsQT5_oKoBQ&bvm=bv.59568121,d.eW0&psig=AFQjCNHtRpsjoVPd4Qn8ItBUkBOAJfbJlQ&ust=1390266085820715",
+    "thumbnailAsset": "http:\/\/www.google.com\/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&docid=oeYTMVuxxuYugM&tbnid=XXpYpeH4PwjaLM:&ved=0CAUQjRw&url=http%3A%2F%2Fmyyellowlab.com%2Fpictures-of-cute-dogs%2F&ei=Q3bcUqqYA_DLsQT5_oKoBQ&bvm=bv.59568121,d.eW0&psig=AFQjCNHtRpsjoVPd4Qn8ItBUkBOAJfbJlQ&ust=1390266085820715",
+    "linksArray": [{
+        "descDirection": 0,
+        "locationPercentageOnImage": "{100, 100}",
+        "linkType": 0,
+        "link": "http:\/\/nobody.com\/aLink",
+        "description": "link description"
+    }],
+    "childPosts": [{
+        "postText": "Test Post Step 2",
+        "postSeqId": 2,
+        "assetType": 1,
+        "hasAttachment": 1,
+        "originalAsset": "http:\/\/www.google.com\/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&docid=RUCTGhiws_Z8HM&tbnid=fGuCZ2xsRLLX0M:&ved=0CAUQjRw&url=http%3A%2F%2Fpetcenternews.com%2Fdog-training-basic-guide%2F&ei=93XcUsuNFNLMsQTMl4LQCQ&bvm=bv.59568121,d.eW0&psig=AFQjCNHtRpsjoVPd4Qn8ItBUkBOAJfbJlQ&ust=1390266085820715",
+        "thumbnailAsset": "http:\/\/www.google.com\/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&docid=RUCTGhiws_Z8HM&tbnid=fGuCZ2xsRLLX0M:&ved=0CAUQjRw&url=http%3A%2F%2Fpetcenternews.com%2Fdog-training-basic-guide%2F&ei=93XcUsuNFNLMsQTMl4LQCQ&bvm=bv.59568121,d.eW0&psig=AFQjCNHtRpsjoVPd4Qn8ItBUkBOAJfbJlQ&ust=1390266085820715",
+        "linksArray": [{
+            "descDirection": 0,
+            "locationPercentageOnImage": "{100, 100}",
+            "linkType": 0,
+            "link": "http:\/\/nobody.com\/aLink",
+            "description": "link description"
+        }]
+    }, {
+        "postText": "Test Post Step 3",
+        "postSeqId": 3,
+        "assetType": 1,
+        "hasAttachment": 1,
+        "originalAsset": "http:\/\/www.google.com\/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&docid=o_8MIntI5aowPM&tbnid=VjX-ZhpQW8joyM:&ved=0CAUQjRw&url=http%3A%2F%2Fabcnews.go.com%2Fblogs%2Flifestyle%2F2013%2F08%2Fyawns-are-contagious-in-dogs-too%2F&ei=xnXcUvf0De_jsASm2IHAAQ&bvm=bv.59568121,d.eW0&psig=AFQjCNHtRpsjoVPd4Qn8ItBUkBOAJfbJlQ&ust=1390266085820715",
+        "thumbnailAsset": "http:\/\/www.google.com\/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&docid=o_8MIntI5aowPM&tbnid=VjX-ZhpQW8joyM:&ved=0CAUQjRw&url=http%3A%2F%2Fabcnews.go.com%2Fblogs%2Flifestyle%2F2013%2F08%2Fyawns-are-contagious-in-dogs-too%2F&ei=xnXcUvf0De_jsASm2IHAAQ&bvm=bv.59568121,d.eW0&psig=AFQjCNHtRpsjoVPd4Qn8ItBUkBOAJfbJlQ&ust=1390266085820715",
+        "linksArray": [{
+            "descDirection": 0,
+            "locationPercentageOnImage": "{100, 100}",
+            "linkType": 0,
+            "link": "http:\/\/nobody.com\/aLink",
+            "description": "link description"
+        }]
+    }, {
+        "postText": "Test Post Step 4",
+        "postSeqId": 4,
+        "assetType": 1,
+        "hasAttachment": 1,
+        "originalAsset": "http:\/\/www.google.com\/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&docid=k4mscpdgB9-uRM&tbnid=xMK_01HkS6JgVM:&ved=0CAUQjRw&url=http%3A%2F%2Fdogsworldafterall.com%2F&ei=a3XcUsCAN4ujsQSnoIGgDg&bvm=bv.59568121,d.eW0&psig=AFQjCNHtRpsjoVPd4Qn8ItBUkBOAJfbJlQ&ust=1390266085820715",
+        "thumbnailAsset": "http:\/\/www.google.com\/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&docid=k4mscpdgB9-uRM&tbnid=xMK_01HkS6JgVM:&ved=0CAUQjRw&url=http%3A%2F%2Fdogsworldafterall.com%2F&ei=a3XcUsCAN4ujsQSnoIGgDg&bvm=bv.59568121,d.eW0&psig=AFQjCNHtRpsjoVPd4Qn8ItBUkBOAJfbJlQ&ust=1390266085820715",
+        "linksArray": [{
+            "descDirection": 0,
+            "locationPercentageOnImage": "{100, 100}",
+            "linkType": 0,
+            "link": "http:\/\/nobody.com\/aLink",
+            "description": "link description"
+        }]
+    }]
+}

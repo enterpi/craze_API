@@ -34,6 +34,9 @@ class Posts extends My_Controller {
 			case 'getPost':
 				$this->load->view('post/test/getPost');
 				break;				
+			case 'createMultiStepPost':
+				$this->load->view('post/test/createMultiStepPost');
+				break;				
 			case 'createPost':
 				$this->load->view('post/test/createPost');
 				break;				
@@ -109,6 +112,15 @@ class Posts extends My_Controller {
 	function createPost() 
 	{
 		$data = $this->post->createPost();
+		$data['sessionToken'] = $this->input->post('sessionToken');
+		$responseJson = json_encode($data);
+		echo encryptResponse($responseJson);
+		$this->audit();
+	}
+
+	function createMultiStepPost() 
+	{
+		$data = $this->post->createMultiStepPost();
 		$data['sessionToken'] = $this->input->post('sessionToken');
 		$responseJson = json_encode($data);
 		echo encryptResponse($responseJson);

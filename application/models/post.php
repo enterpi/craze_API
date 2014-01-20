@@ -24,7 +24,6 @@ class Post extends CI_Model
 		$limit = $this->input->post('limit');
 		$orderBy = $this->input->post('orderBy');
 
-debugDummy("inside getAllPosts");
 		// exception handling
 		if(empty($sessionToken)) {
 			$resData['_responseStatus'] = (integer)false;
@@ -70,11 +69,11 @@ debugDummy("inside getAllPosts");
                         	$myStartKey = array($offset, $offsetDocId);
 
 
-debugDummy("getAllPosts: offset: " . $offset);
-debugDummy("getAllPosts: offsetDocId: " . $offsetDocId);
-debugDummy("getAllPosts: endKey: " . $myEndKey);
-debugDummy("getAllPosts: limit: " . $limit);
-debugDummy("getAllPosts: skip: " . $skip);
+//debugDummy("getAllPosts: offset: " . $offset);
+//debugDummy("getAllPosts: offsetDocId: " . $offsetDocId);
+//debugDummy("getAllPosts: endKey: " . $myEndKey);
+//debugDummy("getAllPosts: limit: " . $limit);
+//debugDummy("getAllPosts: skip: " . $skip);
                         	$results = $cb_obj->view("post", "getAllPostsByLastModified", array('startkey' => $myStartKey,
                                                                                                     'endkey' => $myEndKey,
                                                                                                     'descending' => 'true',
@@ -88,11 +87,6 @@ debugDummy("getAllPosts: skip: " . $skip);
                         	$myEndKey = array(0, "");
                         	$myStartKey = array($offset, $offsetDocId);
 
-debugDummy("getAllPosts: offset: " . $offset);
-debugDummy("getAllPosts: offsetDocId: " . $offsetDocId);
-debugDummy("getAllPosts: endKey: " . $myEndKey);
-debugDummy("getAllPosts: limit: " . $limit);
-debugDummy("getAllPosts: skip: " . $skip);
                         	$results = $cb_obj->view("post", "getAllPostsByScore", array('startkey' => $myStartKey,
                                                                                              'endkey' => $myEndKey,
                                                                                              'skip' => $skip,
@@ -107,16 +101,13 @@ debugDummy("getAllPosts: skip: " . $skip);
 			foreach($results['rows'] as $row) {
                         	// Get post document from db
                                 unset($doc);
-debugDummy("getAllPosts: getting post doc: " .$row['id']);
 	                        $doc = $cb_obj->get($row['id']);
  				if($doc) {
      					$postJson = json_decode($doc, true);
 					// Now get all child posts
                         		$childResults = $cb_obj->view("post", "getChildPostsByPost", array('key' => $row['id']));
-debugDummy("getAllPosts: row[id]: " . $row['id'] . " : count: " . count($childResults['rows']));
 					foreach($childResults['rows'] as $childRow) {
                                 		unset($childDoc);
-debugDummy("getAllPosts: getting Child post doc: " .$childRow['id']);
 			                        $childDoc = $cb_obj->get($childRow['id']);
  						if($childDoc) {
      							$childPostJson = json_decode($childDoc, true);
@@ -204,7 +195,6 @@ debugDummy("getAllPosts: getting Child post doc: " .$childRow['id']);
 			// Generate postDocId if not passed over
 			if (empty($postDocId))
 				$postDocId = DOC_KEY_POST . COUCHBASE_KEY_DELIM . $postId;
-debugDummy("NAM: updatePost: postDocId: " . $postDocId);
 
                         // Get post document from db
                         $postDoc = $cb_obj->get($postDocId);
@@ -294,7 +284,6 @@ debugDummy("NAM: updatePost: postDocId: " . $postDocId);
 			// Verify post Id exists
 			if (empty($postDocId))
 				$postDocId = DOC_KEY_POST . COUCHBASE_KEY_DELIM . $postId;
-debugDummy("NAM: updatePost: postDocId: " . $postDocId);
 
                         // Get post document from db
                         $myDoc = $cb_obj->get($postDocId);
@@ -464,30 +453,173 @@ debugDummy("NAM: updatePost: postDocId: " . $postDocId);
 		return $resData;
 	}
 
-	function createPost() {
+	function createMultiStepPost() {
 		$resData = array();
-debugDummy("a");
-		$sessionToken = $this->input->post('sessionToken');
-		$userId = $this->input->post('userId');
-		$channelId = $this->input->post('channelId');
-		$channelDocId = $this->input->post('channelDocId');
-		$postTitle = $this->input->post('postTitle');
-		$postText = $this->input->post('postText');
-		$originalAsset = $this->input->post('originalAsset');
-		$thumbnailAsset = $this->input->post('thumbnailAsset');
-		$assetType = $this->input->post('assetType'); // Integer value
-		$hasAttachment = $this->input->post('hasAttachment'); // Boolean
-		$parentPostId = $this->input->post('parentPostId'); // Post Doc Id for parent post
-		$postSeqId = $this->input->post('postSeqId'); // Sequence Id for multi step post
-		$isSharedPost = $this->input->post('isSharedPost'); // Boolean
-		$sharedFromPost = $this->input->post('sharedFromPost'); // original post doc Id
-		$likeCount = $this->input->post('likeCount'); // integer value
-		$commentCount = $this->input->post('commentCount'); // integer value
-		$shareCount = $this->input->post('shareCount'); // integer value
-		$isPublic = $this->input->post('isPublic'); // Boolean
-		$linkArray = $this->input->post('linkArray'); // Array of multi links
+		$childPostIds = array();
+		$data = json_decode(file_get_contents('php://input'), true);
+		$jsondata = json_decode($data, true);
+                if ($jsondata == NULL) {
+			debugDummy("createMulti: error json decode");
+		}
 
-debugDummy("b");
+		// Process Parent Post Step
+		$sessionToken = $jsondata['sessionToken'];
+		$userId = $jsondata['userId'];
+		$channelId = $jsondata['channelId'];
+		$channelDocId = $jsondata['channelDocId'];
+		$postTitle = $jsondata['postTitle'];
+		$postText = $jsondata['postText'];
+		$originalAsset = $jsondata['originalAsset'];
+		$thumbnailAsset = $jsondata['thumbnailAsset'];
+		$geolocationLatitude = $jsondata['geolocationLatitude'];
+		$geolocationLongitude = $jsondata['geolocationLongitude'];
+		$assetType = $jsondata['assetType'];
+		$hasAttachment = $jsondata['hasAttachment'];
+		$parentPostId = 0;
+		$postSeqId = 1;
+		$isSharedPost = $jsondata['isSharedPost'];
+		$sharedFromPost = $jsondata['sharedFromPost'];
+		$isPublic = $jsondata['isPublic'];
+		$linkArray = $jsondata['linkArray'];
+		$likeCount = 0;
+		$commentCount = 0;
+		$shareCount = 0;
+
+//debugDummy("sessionToken: " . $sessionToken);
+//debugDummy("userId: " . $userId);
+
+		// Create array for post info and call createPost for parent step
+		$myArray = array('sessionToken' => $sessionToken,
+				 'userId' => $userId,
+				 'channelId' => $channelId,
+				 'channelDocId' => $channelDocId,
+				 'postTitle' => $postTitle,
+				 'postText' => $postText,
+				 'originalAsset' => $originalAsset,
+				 'thumbnailAsset' => $thumbnailAsset,
+				 'geolocationLatitude' => $geolocationLatitude,
+				 'geolocationLongitude' => $geolocationLongitude,
+				 'assetType' => $assetType,
+				 'hasAttachment' => $hasAttachment,
+				 'parentPostId' => $parentPostId,
+				 'postSeqId' => $postSeqId,
+				 'isSharedPost' => $isSharedPost,
+				 'sharedFromPost' => $sharedFromPost,
+				 'isPublic' => $isPublic,
+				 'linkArray' => $linkArray,
+				 'likeCount' => $likeCount,
+				 'commentCount' => $commentCount,
+				 'shareCount' => $shareCount);
+
+		$myRet = $this->createPost($myArray);
+		if ($myRet['_responseStatus'] == (integer)false ) {
+debugDummy("createMulti: failed to create parent post doc");
+			return $myRet;
+		}
+
+		// Successfully created Parent Post Step, extract postId for child steps
+		$postId = $myRet['postId'];
+		$postDocId = $myRet['postDocId'];
+//debugDummy("createMulti: parentPostId: " . $postId);
+//debugDummy("createMulti: parentPostDocId: " . $postDocId);
+
+		// Iterate through childPosts and create sub post for each step
+		foreach($jsondata['childPosts'] as $childPost) {
+			unset($myArray);
+			unset($myRet);
+			// Setup new data array for post creation
+			$myArray = array('sessionToken' => $sessionToken,
+					 'userId' => $userId,
+					 'channelId' => $channelId,
+					 'channelDocId' => $channelDocId,
+					 'postTitle' => '',
+					 'postText' => $childPost['postText'],
+					 'originalAsset' => $childPost['originalAsset'],
+					 'thumbnailAsset' => $childPost['thumbnailAsset'],
+					 'geolocationLatitude' => $geolocationLatitude,
+					 'geolocationLongitude' => $geolocationLongitude,
+					 'assetType' => $childPost['assetType'],
+					 'hasAttachment' => $childPost['hasAttachment'],
+					 'parentPostId' => $postDocId,
+					 'postSeqId' => $childPost['postSeqId'],
+					 'isSharedPost' => $isSharedPost,
+					 'sharedFromPost' => $sharedFromPost,
+					 'isPublic' => $isPublic,
+					 'linkArray' => $childPost['linkArray'],
+					 'likeCount' => $likeCount,
+					 'commentCount' => $commentCount,
+					 'shareCount' => $shareCount);
+
+			$myRet = $this->createPost($myArray);
+			if ($myRet['_responseStatus'] == (integer)false ) {
+debugDummy("createMulti: failed to create parent post doc");
+				$myRet['postId'] = $postId;
+				$myRet['postDocId'] = $postDocId;
+				$myRet['childPostIds'] = $childPostIds;
+				return $myRet;
+			}
+			
+			array_push($childPostIds, $myRet['postId']);
+		}
+
+		// Return success and the postId
+		$resData['_responseStatus'] = (integer)true;
+		$resData['sessionToken'] = $sessionToken;
+		$resData['postId'] = $postId;
+		$resData['postDocId'] = $postDocId;
+		$resData['childPostIds'] = $childPostIds;
+
+		return $resData;
+	}
+
+	function createPost($jsondata = "") {
+		$resData = array();
+		if (empty($jsondata)) {
+			$sessionToken = $this->input->post('sessionToken');
+			$userId = $this->input->post('userId');
+			$channelId = $this->input->post('channelId');
+			$channelDocId = $this->input->post('channelDocId');
+			$postTitle = $this->input->post('postTitle');
+			$postText = $this->input->post('postText');
+			$originalAsset = $this->input->post('originalAsset');
+			$thumbnailAsset = $this->input->post('thumbnailAsset');
+			$geolocationLatitude = $this->input->post('geolocationLatitude');
+			$geolocationLongitude = $this->input->post('geolocationLongitude');
+			$assetType = $this->input->post('assetType'); // Integer value
+			$hasAttachment = $this->input->post('hasAttachment'); // Boolean
+			$parentPostId = $this->input->post('parentPostId'); // Post Doc Id for parent post
+			$postSeqId = $this->input->post('postSeqId'); // Sequence Id for multi step post
+			$isSharedPost = $this->input->post('isSharedPost'); // Boolean
+			$sharedFromPost = $this->input->post('sharedFromPost'); // original post doc Id
+			$likeCount = $this->input->post('likeCount'); // integer value
+			$commentCount = $this->input->post('commentCount'); // integer value
+			$shareCount = $this->input->post('shareCount'); // integer value
+			$isPublic = $this->input->post('isPublic'); // Boolean
+			$linkArray = $this->input->post('linkArray'); // Array of multi links
+		} else {
+			$sessionToken = $jsondata['sessionToken'];
+			$userId = $jsondata['userId'];
+			$channelId = $jsondata['channelId'];
+			$channelDocId = $jsondata['channelDocId'];
+			$postTitle = $jsondata['postTitle'];
+			$postText = $jsondata['postText'];
+			$originalAsset = $jsondata['originalAsset'];
+			$thumbnailAsset = $jsondata['thumbnailAsset'];
+			$geolocationLatitude = $jsondata['geolocationLatitude'];
+			$geolocationLongitude = $jsondata['geolocationLongitude'];
+			$assetType = $jsondata['assetType'];
+			$hasAttachment = $jsondata['hasAttachment'];
+			$parentPostId = $jsondata['parentPostId'];
+			$postSeqId = $jsondata['postSeqId'];
+			$isSharedPost = $jsondata['isSharedPost'];
+			$sharedFromPost = $jsondata['sharedFromPost'];
+			$isPublic = $jsondata['isPublic'];
+			$linkArray = $jsondata['linkArray'];
+			$likeCount = $jsondata['likeCount'];
+			$commentCount = $jsondata['commentCount'];
+			$shareCount = $jsondata['shareCount'];
+		}
+
 		// exception handling
 		if(empty($userId)) {
 			$resData['_responseStatus'] = (integer)false;
@@ -515,7 +647,6 @@ debugDummy("b");
 			return $resData;
 		}
 
-debugDummy("c");
 		// Authenticate userId matches sessionToken
 		$sessionUserId = $userId; //NAM just for testing now need to get from memcache
 		if ($userId != $sessionUserId) {
@@ -523,6 +654,11 @@ debugDummy("c");
 			list($resData['msgCode'], $resData['msg']) = generateError('ERR_003');
 			return $resData;
 		}
+
+		if (empty($geolocationLatitude)) 
+			$geolocationLatitude = DEFAULT_LATITUDE;
+		if (empty($geolocationLongitude)) 
+			$geolocationLongitude = DEFAULT_LONGITUDE;
 
 		// Set isSharedPost to true if not passed over as true
 		if ((!isset($isSharedPost)) || ($isSharedPost != API_TRUE)) {
@@ -538,7 +674,6 @@ debugDummy("c");
 			$isPublic = false;
 		}
 
-debugDummy("d");
 		// Set hasAttachment to true if passed over
 		if ((!isset($hasAttachement)) || ($hasAttachement != API_FALSE)) {
 			$hasAttachement = true;
@@ -554,11 +689,9 @@ debugDummy("d");
  
 
 
-debugDummy("e");
 		try {
 			$cb_obj = new Couchbase($this->config->item('cb_hostname'), $this->config->item('cb_username'), $this->config->item('cb_password'), $this->config->item('cb_craze_bucket'));
 
-debugDummy("f");
 			// Ensure userId passed exists in db
                         $userProfile = DOC_KEY_USER_PROFILE . COUCHBASE_KEY_DELIM . $userId;
                         $profileDoc = $cb_obj->get($userProfile);
@@ -567,7 +700,6 @@ debugDummy("f");
 				list($resData['msgCode'], $resData['msg']) = generateError('PST_006');
 				return $resData;
 			}
-debugDummy("g");
 
 			// Verify channel Id exists
                         if (!empty($channelDocId)) {
@@ -577,14 +709,36 @@ debugDummy("g");
                                 $channelDocId = DOC_KEY_CHANNEL . COUCHBASE_KEY_DELIM . $channelId;
 			}
 
-debugDummy("h");
                         $myDoc = $cb_obj->get($channelDocId);
 			if ($cb_obj->getResultCode() != 0) {
 				$resData['_responseStatus'] = (integer)false;
 				list($resData['msgCode'], $resData['msg']) = generateError('PST_007');
 				return $resData;
 			}
-debugDummy("i");
+
+			// Validate that user is the owner of the channel
+                        if($myDoc) {
+                                $doc = json_decode($myDoc, true);
+                        } else {
+                                $resData['_responseStatus'] = (integer)false;
+                                list($resData['msgCode'], $resData['msg']) = generateError('PST_007');
+                                return $resData;
+                        }
+
+			// validate decode of json worked
+			if ($doc == NULL) {
+				$resData['_responseStatus'] = (integer)false;
+				list($resData['msgCode'], $resData['msg']) = generateError('ERR_004');
+                               	return $resData;
+			}
+
+			// Validate if the userId owns the channel
+			$userProfileId = DOC_KEY_USER_PROFILE . COUCHBASE_KEY_DELIM . $userId;
+			if (strcmp($doc['userProfile'], $userProfileId) != 0) {
+                                $resData['_responseStatus'] = (integer)false;
+                                list($resData['msgCode'], $resData['msg']) = generateError('PST_023');
+                                return $resData;
+			}
 
 			// If shared from post then validate original post exists 
 			if (!empty($sharedFromPost)) {
@@ -595,11 +749,10 @@ debugDummy("i");
                                 	return $resData;
 				}
                         }
-debugDummy("j");
 
 			// Get next postId from db
                         $postId = $this->IdCounts->internalGetNextPostId();
-debugDummy("createPost: postId: " .$postId);
+//debugDummy("createPost: postId: " .$postId);
 
 			if ($postId != 0) {
 	                        // Generate json document for new channel
@@ -613,6 +766,8 @@ debugDummy("createPost: postId: " .$postId);
                                                         'hasAttachment' => $hasAttachment,
                                                         'postSeqId' => $postSeqId,
                                                         'parentPostId' => $parentPostId,
+                                                        'geolocationLatitude' => $geolocationLatitude,
+                                                        'geolocationLongitude' => $geolocationLongitude,
                                                         'originalAsset' => $originalAsset,
                                                         'thumbnailAsset' => $thumbnailAsset,
                                                         'postTitle' => $postTitle,
@@ -696,7 +851,6 @@ debugDummy("createPost: postId: " .$postId);
 
 			if (empty($postDocId))
 				$postDocId = DOC_KEY_POST . COUCHBASE_KEY_DELIM . $postId;
-debugDummy("NAM: deletePost: postDocId: " . $postDocId);
 
                         // Get post document from db
                         $myDoc = $cb_obj->get($postDocId);
@@ -791,7 +945,6 @@ debugDummy("NAM: deletePost: postDocId: " . $postDocId);
 
 			if (empty($postDocId))
 				$postDocId = DOC_KEY_POST . COUCHBASE_KEY_DELIM . $postId;
-debugDummy("NAM: undeletePost: postDocId: " . $postDocId);
 
                         // Get post document from db
                         $myDoc = $cb_obj->get($postDocId);
@@ -897,7 +1050,6 @@ debugDummy("NAM: undeletePost: postDocId: " . $postDocId);
                                 $postDocId = DOC_KEY_POST . COUCHBASE_KEY_DELIM . $postId;
                         }
 
-debugDummy("postDocId: " . $postDocId);
                 	$postDocRaw = $cb_obj->get($postDocId);
 			// validate json decode worked ok
 			if ($postDocRaw == NULL) {
@@ -921,7 +1073,6 @@ debugDummy("postDocId: " . $postDocId);
 
 			// Generate like post doc id base don postDocId and userId
 			$likeDocId = $postDocId . COUCHBASE_SECOND_DELIM . DOC_KEY_LIKE . COUCHBASE_KEY_DELIM . $userId;
-debugDummy("likePost: like Doc Id: " .$likeDocId);
 
 			// Generate userProfile for doc
 			$userProfile = DOC_KEY_USER_PROFILE . COUCHBASE_KEY_DELIM . $userId;
@@ -1012,7 +1163,6 @@ debugDummy("likePost: like Doc Id: " .$likeDocId);
 
 			// Generate like post doc id base don postDocId and userId
 			$likeDocId = $postDocId . COUCHBASE_SECOND_DELIM . DOC_KEY_LIKE . COUCHBASE_KEY_DELIM . $userId;
-debugDummy("unlikePost: like Doc Id: " .$likeDocId);
 
 			// Get likeDoc from db
                         $likeDoc = $cb_obj->get($likeDocId);
@@ -1040,7 +1190,6 @@ debugDummy("unlikePost: like Doc Id: " .$likeDocId);
 			// Remove like doc from db - ie unlike post
                         $cb_obj->delete($likeDocId);
                         if ($cb_obj->getResultCode() != 0) {
-debugDummy("unlikePost:  result: " . $cb_obj->getResultCode());
                                 $resData['_responseStatus'] = (integer)false;
                                 list($resData['msgCode'], $resData['msg']) = generateError('ERR_002');
                                 return $resData;
@@ -1134,7 +1283,6 @@ debugDummy("unlikePost:  result: " . $cb_obj->getResultCode());
 			// Generate comment post doc id base don postDocId and userId
                        	$timestamp = time();
 			$commentDocId = $postDocId . COUCHBASE_SECOND_DELIM . DOC_KEY_COMMENT . COUCHBASE_KEY_DELIM . $userId . COUCHBASE_SECOND_DELIM . $timestamp;
-debugDummy("addComment: comment Doc Id: " .$commentDocId);
 
 			// Generate userProfile for doc
 			$userProfile = DOC_KEY_USER_PROFILE . COUCHBASE_KEY_DELIM . $userId;
@@ -1365,7 +1513,6 @@ debugDummy("addComment: comment Doc Id: " .$commentDocId);
 
 			// Generate comment post doc id base don postDocId and userId - means only 1 share doc is permitted per channel
 			$shareDocId = $postDocId . COUCHBASE_SECOND_DELIM . DOC_KEY_SHARE . COUCHBASE_KEY_DELIM . $channelId;
-debugDummy("sharePost: comment Doc Id: " .$shareDocId);
 			$shareDoc = $cb_obj->get($shareDocId);
                         if($shareDoc) {
                                 $resData['_responseStatus'] = (integer)false;
@@ -1528,7 +1675,6 @@ debugDummy("sharePost: comment Doc Id: " .$shareDocId);
 	}
 
 	function updatePostScore($cb_obj, $postDocId, $type, $action) 	{
-debugDummy("insode updatePostScore");
 		// Get postDoc from db
                 $postDoc = $cb_obj->get($postDocId);
                 if ($cb_obj->getResultCode() != 0) {
@@ -1545,20 +1691,16 @@ debugDummy("insode updatePostScore");
 		if ($action == POST_ACTION_REMOVE) 
 			$incrAmount = -1;
 
-debugDummy("type: " . $type);
 		switch($type) {
 			case POST_LIKE_TYPE:
-debugDummy("like");
 				$doc['likeCount'] += (1 * $incrAmount);
 				$doc['postScore'] += (POST_SCORE_LIKE * $incrAmount);
 				break;
 			case POST_COMMENT_TYPE:
-debugDummy("coment");
 				$doc['commentCount'] += (1 * $incrAmount);
 				$doc['postScore'] += (POST_SCORE_COMMENT * $incrAmount);
 				break;
 			case POST_SHARE_TYPE:
-debugDummy("share");
 				$doc['shareCount'] += (1 * $incrAmount);
 				$doc['postScore'] += (POST_SCORE_SHARE * $incrAmount);
 				break;
@@ -1571,10 +1713,8 @@ debugDummy("share");
                 $cb_obj->replace($postDocId, $jsonDoc);
                 if ($cb_obj->getResultCode() != 0) {
 			return false;
-debugDummy("return false");
 		}
 		
-debugDummy("return true");
 		return true;
 	}
 }

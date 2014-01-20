@@ -73,6 +73,12 @@ define('CHANNEL_DEFAULT_LIMIT', 5);
 define('CHANNEL_MAX_ID', 9999999999999999);
 define('CHANNEL_PERSONAL_CHANNEL_ID', "Cat::PersonalChannels");
 
+
+//Geo Location 
+define('DEFAULT_LATITUDE', -999);
+define('DEFAULT_LONGITUDE', -999);
+
+
 // NAM: end of my constants
 
 
