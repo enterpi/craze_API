@@ -237,6 +237,7 @@ class Post extends CI_Model
                 $userId = $this->input->post('userId');
                 $postId = $this->input->post('postId');
                 $postDocId = $this->input->post('postDocId');
+                $categoryDocId = $this->input->post('categoryDocId');
                 $channelId = $this->input->post('channelId');
                 $channelDocId = $this->input->post('channelDocId');
                 $postTitle = $this->input->post('postTitle');
@@ -300,6 +301,19 @@ class Post extends CI_Model
 				$resData['_responseStatus'] = (integer)false;
 				list($resData['msgCode'], $resData['msg']) = generateError('ERR_004');
                                	return $resData;
+			}
+
+			// Change category Doc Id
+			if (!empty($categoryDocId)) {
+				// Ensure categoryDocId passed exists in db
+                        	$categoryDoc = $cb_obj->get($categoryDocId);
+				if ($cb_obj->getResultCode() != 0) {
+					$resData['_responseStatus'] = (integer)false;
+					list($resData['msgCode'], $resData['msg']) = generateError('PST_024');
+					return $resData;
+				}
+				$doc['categoryDocId'] = $categoryDocId;
+				$needsUpdate = true;
 			}
 
 			// Change channel Id
@@ -465,6 +479,7 @@ class Post extends CI_Model
 		// Process Parent Post Step
 		$sessionToken = $jsondata['sessionToken'];
 		$userId = $jsondata['userId'];
+		$categoryDocId = $jsondata['categoryDocId'];
 		$channelId = $jsondata['channelId'];
 		$channelDocId = $jsondata['channelDocId'];
 		$postTitle = $jsondata['postTitle'];
@@ -475,7 +490,7 @@ class Post extends CI_Model
 		$geolocationLongitude = $jsondata['geolocationLongitude'];
 		$assetType = $jsondata['assetType'];
 		$hasAttachment = $jsondata['hasAttachment'];
-		$parentPostId = 0;
+		$parentPostId = "0";
 		$postSeqId = 1;
 		$isSharedPost = $jsondata['isSharedPost'];
 		$sharedFromPost = $jsondata['sharedFromPost'];
@@ -491,6 +506,7 @@ class Post extends CI_Model
 		// Create array for post info and call createPost for parent step
 		$myArray = array('sessionToken' => $sessionToken,
 				 'userId' => $userId,
+				 'categoryDocId' => $categoryDocId,
 				 'channelId' => $channelId,
 				 'channelDocId' => $channelDocId,
 				 'postTitle' => $postTitle,
@@ -530,6 +546,7 @@ debugDummy("createMulti: failed to create parent post doc");
 			// Setup new data array for post creation
 			$myArray = array('sessionToken' => $sessionToken,
 					 'userId' => $userId,
+				 	 'categoryDocId' => $categoryDocId,
 					 'channelId' => $channelId,
 					 'channelDocId' => $channelDocId,
 					 'postTitle' => '',
@@ -577,6 +594,7 @@ debugDummy("createMulti: failed to create parent post doc");
 		if (empty($jsondata)) {
 			$sessionToken = $this->input->post('sessionToken');
 			$userId = $this->input->post('userId');
+			$categoryDocId = $this->input->post('categoryDocId');
 			$channelId = $this->input->post('channelId');
 			$channelDocId = $this->input->post('channelDocId');
 			$postTitle = $this->input->post('postTitle');
@@ -599,6 +617,7 @@ debugDummy("createMulti: failed to create parent post doc");
 		} else {
 			$sessionToken = $jsondata['sessionToken'];
 			$userId = $jsondata['userId'];
+			$categoryDocId = $jsondata['categoryDocId'];
 			$channelId = $jsondata['channelId'];
 			$channelDocId = $jsondata['channelDocId'];
 			$postTitle = $jsondata['postTitle'];
@@ -760,6 +779,7 @@ debugDummy("createMulti: failed to create parent post doc");
                         	$myDocArray = array('type' => DOC_TYPE_POST,
                                                         'userId' => $userId,
                                                         'userProfile' => $userProfile,
+                                                        'categoryDocId' => $categoryDocId,
                                                         'channelId' => $channelId,
                                                         'channelDocId' => $channelDocId,
                                                         'assetType' => $assetType,

@@ -3,6 +3,7 @@
     "postSeqId": 0,
     "userId": 2007,
     "userDocId": "usr::2007",
+    "categoryDocId": "Cat::Charities&Organizations",
     "channelId": 2018,
     "channelDocId": "chn::2018",
     "sharedPost": 0,

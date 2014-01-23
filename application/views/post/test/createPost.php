@@ -12,6 +12,7 @@
 	<form name="createPost" action="<?php echo site_url('posts/createPost');?>" method="post">
 		<p>SessionToken: <input type="text" name="sessionToken" value="" id="sessionToken"/> </p>
 		<p>User Id: <input type="text" name="userId" value="" id="userId"/> </p>
+		<p>Category Doc Id: <input type="text" name="categoryDocId" value="" id="categoryDocId"/> </p>
 		<p>Channel Id: <input type="text" name="channelId" value="" id="channelId"/> </p>
 		<p>Channel Doc Id: <input type="text" name="channelDocId" value="" id="channelDocId"/> </p>
 		<p>Post Title: <input type="text" name="postTitle" value="" id="postTitle"/> </p>

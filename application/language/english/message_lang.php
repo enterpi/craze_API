@@ -69,5 +69,6 @@ $lang['PST_020'] = "Post has already been shared to that channel.";
 $lang['PST_021'] = "Must specify shareDocId.";
 $lang['PST_022'] = "Cannot find specified share document.";
 $lang['PST_023'] = "User is not the owner of the channel.";
+$lang['PST_024'] = "Specified category Doc does not exist.";
 
 ?>

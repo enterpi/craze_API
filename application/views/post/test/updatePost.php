@@ -14,6 +14,7 @@
 		<p>User Id: <input type="text" name="userId" value="" id="userId"/> </p>
 		<p>Post Id: <input type="text" name="postId" value="" id="postId"/> </p>
 		<p>Post Doc Id: <input type="text" name="postDocId" value="" id="postDocId"/> </p>
+		<p>Category Doc Id: <input type="text" name="categoryDocId" value="" id="categoryDocId"/> </p>
 		<p>Channel Id: <input type="text" name="channelId" value="" id="channelId"/> </p>
 		<p>Channel Doc Id: <input type="text" name="channelDocId" value="" id="channelDocId"/> </p>
 		<p>Post Title: <input type="text" name="postTitle" value="" id="postTitle"/> </p>
